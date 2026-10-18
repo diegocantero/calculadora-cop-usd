@@ -121,6 +121,25 @@ export function obligadoADeclarar(ingresoAnual, uvt = UVT_2026.value) {
 }
 
 /**
+ * Billable months per year for an independent contractor.
+ * With paid vacations all 12 months are billed; otherwise unpaid vacation days
+ * (converted to months using the working days per month) are discounted.
+ *
+ * @param {boolean} vacacionesPagas - Whether the remote contract pays vacations.
+ * @param {number} diasVacaciones - Unpaid vacation days per year (business days).
+ * @param {number} [diasHabilesMes=DIAS_HABILES_MES.value] - Working days per month.
+ * @returns {number} Billable months (0-12).
+ */
+export function mesesFacturables(
+  vacacionesPagas,
+  diasVacaciones,
+  diasHabilesMes = DIAS_HABILES_MES.value,
+) {
+  if (vacacionesPagas) return 12;
+  return Math.max(0, 12 - diasVacaciones / diasHabilesMes);
+}
+
+/**
  * Main conversion and comparison engine between Colombian employee salary (COP)
  * and international independent contractor fees (USD).
  *
@@ -160,9 +179,7 @@ export function calcular({
 
   // Billable months M per year
   const workingDaysPerMonth = DIAS_HABILES_MES.value;
-  const billableMonths = vacacionesPagas
-    ? 12
-    : Math.max(0, 12 - safeDiasVacaciones / workingDaysPerMonth);
+  const billableMonths = mesesFacturables(vacacionesPagas, safeDiasVacaciones, workingDaysPerMonth);
 
   // Social security contribution rates
   const independentSSRate =
