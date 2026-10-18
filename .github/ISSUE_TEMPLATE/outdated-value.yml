@@ -1,0 +1,65 @@
+name: Outdated Fiscal Value / Constant
+description: Report an outdated parameter such as UVT, SMMLV, auxilio de transporte, or tax brackets.
+title: "[Outdated Value]: "
+labels: ["outdated-value", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an outdated fiscal parameter or calculation constant.
+        Please provide the official Colombian government source (DIAN resolution, Ministry of Labor decree, etc.) confirming the new value.
+  - type: dropdown
+    id: parameter
+    attributes:
+      label: Outdated Parameter
+      description: Which constant needs to be updated?
+      options:
+        - UVT (Unidad de Valor Tributario)
+        - SMMLV (Salario Mínimo Mensual Legal Vigente)
+        - Auxilio de transporte
+        - TRM Fallback rate
+        - Tax bracket / Retención en la fuente (Art. 383 E.T.)
+        - Social security contribution rates or caps
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: current-value
+    attributes:
+      label: Current Value in Application
+      description: What value is currently displayed or configured in the app?
+      placeholder: e.g. UVT = 49799 COP
+    validations:
+      required: false
+  - type: input
+    id: proposed-value
+    attributes:
+      label: Correct / Updated Value
+      description: What should the updated value be?
+      placeholder: e.g. UVT = 52300 COP
+    validations:
+      required: true
+  - type: input
+    id: official-source
+    attributes:
+      label: Official Source URL / Decree
+      description: Provide a direct link to the official DIAN resolution, government decree, or official publication.
+      placeholder: e.g. https://www.dian.gov.co/normatividad/resolucion-xxxx-2026.pdf
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any extra details, effective start date, or legal notes.
+    validations:
+      required: false
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: Verification
+      options:
+        - label: I have verified this change with an official Colombian government source (DIAN, MinTrabajo, SuperFinanciera, etc.).
+          required: true
+        - label: I checked existing issues to confirm this has not been reported already.
+          required: true

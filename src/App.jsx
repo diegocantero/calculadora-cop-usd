@@ -1,122 +1,107 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import TopBar from './components/TopBar';
+import Calculator from './components/Calculator';
+import AdvancedSettings from './components/AdvancedSettings';
+import ComparisonCards from './components/ComparisonCards';
+import WithholdingSection from './components/WithholdingSection';
+import TaxAlert from './components/TaxAlert';
+import HowItWorks from './components/HowItWorks';
+import TaxRelief from './components/TaxRelief';
+import FAQ from './components/FAQ';
+import Sources from './components/Sources';
+import Footer from './components/Footer';
+import { useCalculator } from './hooks/useCalculator';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const {
+    direction,
+    setDirection,
+    amount,
+    setAmount,
+    paidVacation,
+    setPaidVacation,
+    vacationDays,
+    setVacationDays,
+    isIntegral,
+    setIsIntegral,
+    trm,
+    setTrm,
+    exchangeCostPct,
+    setExchangeCostPct,
+    uvt,
+    setUvt,
+    compareAfterWithholding,
+    setCompareAfterWithholding,
+    result,
+    resetDefaults,
+    defaults,
+  } = useCalculator();
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
+      {/* 1. Sticky Navigation TopBar */}
+      <TopBar />
 
-      <div className="ticks"></div>
+      <main className="flex-1">
+        {/* 2. Hero & Main Interactive Calculator */}
+        <Calculator
+          direction={direction}
+          setDirection={setDirection}
+          amount={amount}
+          setAmount={setAmount}
+          paidVacation={paidVacation}
+          setPaidVacation={setPaidVacation}
+          vacationDays={vacationDays}
+          setVacationDays={setVacationDays}
+          result={result}
+          trm={trm}
+        />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {/* Advanced Settings (collapsible, placed below the calculator) */}
+        <AdvancedSettings
+          trm={trm}
+          setTrm={setTrm}
+          exchangeCostPct={exchangeCostPct}
+          setExchangeCostPct={setExchangeCostPct}
+          uvt={uvt}
+          setUvt={setUvt}
+          isIntegral={isIntegral}
+          setIsIntegral={setIsIntegral}
+          resetDefaults={resetDefaults}
+          defaults={defaults}
+        />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {/* 3. Comparison Cards (Empleado vs Independiente) */}
+        <ComparisonCards
+          result={result}
+          isIntegral={isIntegral}
+          trm={trm}
+        />
+
+        {/* 4. Withholding & Tax Provisioning Section */}
+        <WithholdingSection
+          result={result}
+          compareAfterWithholding={compareAfterWithholding}
+          setCompareAfterWithholding={setCompareAfterWithholding}
+        />
+
+        {/* 5. Conditional DIAN Tax Alert Banner (>= 1,400 UVT) */}
+        <TaxAlert result={result} uvt={uvt} />
+
+        {/* 6. How It Works (3 Steps) */}
+        <HowItWorks />
+
+        {/* 7. Tax Relief Accordion & Statutory Limits */}
+        <TaxRelief />
+
+        {/* 8. Frequently Asked Questions (FAQ) */}
+        <FAQ />
+
+        {/* 9. Official Data Sources & Parameter Validity */}
+        <Sources trm={trm} />
+      </main>
+
+      {/* 10. Comprehensive Footer */}
+      <Footer />
+    </div>
+  );
 }
-
-export default App
