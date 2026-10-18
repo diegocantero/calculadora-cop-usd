@@ -1,13 +1,16 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { UVT_2026, SMMLV_2026, TRM_DEFAULT, COSTO_CAMBIO_DEFAULT } from '../config.js';
+import { getTRM } from '../lib/trm.js';
 
-// Official / standard 2026 default constants
+// Defaults come from src/config.js (single source of truth). TRM here is only the
+// offline fallback; the live value is loaded from public/trm.json via getTRM().
 export const DEFAULT_CONFIG = {
-  copAmount: 10000000,
-  usdAmount: 3210,
-  trm: 4000,
-  exchangeCostPct: 3,
-  uvt: 49799,
-  smmlv: 1423500,
+  copAmount: 3000000,
+  usdAmount: 1000,
+  trm: TRM_DEFAULT.value,
+  exchangeCostPct: COSTO_CAMBIO_DEFAULT.value * 100,
+  uvt: UVT_2026.value,
+  smmlv: SMMLV_2026.value,
   vacationDays: 15,
   paidVacation: true,
   isIntegral: false,
@@ -48,9 +51,9 @@ function fallbackCalcular({
   paidVacation = true,
   vacationDays = 15,
   isIntegral = false,
-  trm = 4000,
+  trm = DEFAULT_CONFIG.trm,
   exchangeCostPct = 3,
-  uvt = 49799,
+  uvt = DEFAULT_CONFIG.uvt,
 }) {
   const numericAmount = Math.max(0, Number(amount) || 0);
 
@@ -149,8 +152,8 @@ export function useCalculator() {
   const getInitialState = () => {
     if (typeof window === 'undefined') {
       return {
-        direction: 'copToUsd',
-        amount: DEFAULT_CONFIG.copAmount,
+        direction: 'usdToCop',
+        amount: DEFAULT_CONFIG.usdAmount,
         paidVacation: DEFAULT_CONFIG.paidVacation,
         vacationDays: DEFAULT_CONFIG.vacationDays,
         isIntegral: DEFAULT_CONFIG.isIntegral,
@@ -169,7 +172,8 @@ export function useCalculator() {
     const integralParam = params.get('integral');
     const costParam = params.get('costo');
 
-    const direction = usdParam && !copParam ? 'usdToCop' : 'copToUsd';
+    // Default view is USD → COP (USD 1.000); COP → USD only when ?cop= is present.
+    const direction = copParam && !usdParam ? 'copToUsd' : 'usdToCop';
     const amount = direction === 'copToUsd'
       ? (copParam ? Number(copParam) : DEFAULT_CONFIG.copAmount)
       : (usdParam ? Number(usdParam) : DEFAULT_CONFIG.usdAmount);
@@ -195,6 +199,27 @@ export function useCalculator() {
   const [exchangeCostPct, setExchangeCostPct] = useState(() => getInitialState().exchangeCostPct);
   const [uvt, setUvt] = useState(() => getInitialState().uvt);
   const [compareAfterWithholding, setCompareAfterWithholding] = useState(false);
+  const [trmInfo, setTrmInfo] = useState({
+    valor: DEFAULT_CONFIG.trm,
+    vigenteDesde: '',
+    fuente: 'Configuración predeterminada',
+    desactualizada: true,
+    cargando: true,
+  });
+
+  // Load the official TRM once; respect a manual ?trm= override from the URL.
+  useEffect(() => {
+    let cancelled = false;
+    const hasUrlOverride = new URLSearchParams(window.location.search).has('trm');
+    getTRM().then((data) => {
+      if (cancelled) return;
+      setTrmInfo({ ...data, cargando: false });
+      if (!hasUrlOverride) setTrm(data.valor);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Sync URL search parameters on changes without reloading
   useEffect(() => {
@@ -212,7 +237,7 @@ export function useCalculator() {
       params.set('dias', String(vacationDays));
     }
 
-    if (trm !== DEFAULT_CONFIG.trm) {
+    if (trm !== trmInfo.valor) {
       params.set('trm', String(trm));
     }
 
@@ -227,7 +252,7 @@ export function useCalculator() {
     const newQuery = params.toString();
     const newRelativePathQuery = window.location.pathname + (newQuery ? `?${newQuery}` : '');
     window.history.replaceState(null, '', newRelativePathQuery);
-  }, [direction, amount, paidVacation, vacationDays, trm, exchangeCostPct, isIntegral]);
+  }, [direction, amount, paidVacation, vacationDays, trm, trmInfo.valor, exchangeCostPct, isIntegral]);
 
   // Dynamically resolve calc engine from ../lib/calc.js if it exists, otherwise fallback
   const result = useMemo(() => {
@@ -238,7 +263,8 @@ export function useCalculator() {
           monto: amount,
           vacacionesPagas: paidVacation,
           diasVacaciones: vacationDays,
-          despuesDeRetencion: compareAfterWithholding,
+          // The withholding switch is display-only: it must not change the headline result.
+          despuesDeRetencion: false,
           trm,
           costoCambio: exchangeCostPct > 1 ? exchangeCostPct / 100 : exchangeCostPct,
           integral: isIntegral,
@@ -250,7 +276,6 @@ export function useCalculator() {
           vacationDays,
           isIntegral,
           exchangeCostPct,
-          compareAfterWithholding,
         });
         if (computed && typeof computed === 'object') {
           return computed;
@@ -269,7 +294,6 @@ export function useCalculator() {
       trm,
       exchangeCostPct,
       uvt,
-      compareAfterWithholding,
     });
   }, [
     direction,
@@ -280,17 +304,16 @@ export function useCalculator() {
     trm,
     exchangeCostPct,
     uvt,
-    compareAfterWithholding,
   ]);
 
   const resetDefaults = useCallback(() => {
-    setTrm(DEFAULT_CONFIG.trm);
+    setTrm(trmInfo.valor);
     setExchangeCostPct(DEFAULT_CONFIG.exchangeCostPct);
     setUvt(DEFAULT_CONFIG.uvt);
     setIsIntegral(DEFAULT_CONFIG.isIntegral);
     setPaidVacation(DEFAULT_CONFIG.paidVacation);
     setVacationDays(DEFAULT_CONFIG.vacationDays);
-  }, []);
+  }, [trmInfo.valor]);
 
   return {
     direction,
@@ -305,6 +328,7 @@ export function useCalculator() {
     setIsIntegral,
     trm,
     setTrm,
+    trmInfo,
     exchangeCostPct,
     setExchangeCostPct,
     uvt,

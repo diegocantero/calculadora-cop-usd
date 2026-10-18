@@ -106,11 +106,11 @@ export const COSTO_CAMBIO_DEFAULT = {
  * Default reference exchange rate (TRM) in COP per USD.
  */
 export const TRM_DEFAULT = {
-  value: 4000,
+  value: 3175,
   year: 2026,
-  verified: true,
+  verified: false,
   source: 'https://www.superfinanciera.gov.co/publicacion/60819',
-  description: 'Tasa Representativa del Mercado (TRM) de referencia.',
+  description: 'Valor de respaldo (offline) de la TRM; el valor vigente se lee de public/trm.json, actualizado a diario.',
 };
 
 /**
