@@ -1,0 +1,31 @@
+{
+  "name": "calculadora-cop-usd",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Calculadora de salario equivalente COP ↔ USD para independientes en Colombia",
+  "author": "Diego Cantero",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vitest",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "fast-xml-parser": "^5.11.2",
+    "oxlint": "^1.81.0",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.5"
+  }
+}
