@@ -1,6 +1,6 @@
 # Calculadora COP ↔ USD
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](LICENSE)
 [![Deploy](https://github.com/diegocantero/calculadora-cop-usd/actions/workflows/deploy.yml/badge.svg)](https://github.com/diegocantero/calculadora-cop-usd/actions/workflows/deploy.yml)
 
 A transparent Colombian salary converter between local employee compensation (COP) and international contractor fees (USD), accounting for statutory benefits, mandatory social security, currency exchange costs, and income tax withholdings.
@@ -135,6 +135,12 @@ All calculations and constants correspond strictly to Colombian legal frameworks
 
 ---
 
+## AI usage
+
+This project was built with AI assistance (Claude, Gemini). Tax parameters come from official sources, not from AI. See [AI_USAGE.md](AI_USAGE.md) for details.
+
+---
+
 ## Contributing
 
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on reporting outdated rates, writing tests, and opening pull requests.
@@ -143,8 +149,8 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for gu
 
 ## License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+This project is licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/): free to use and share with attribution, **not for commercial use**, and **no modifications or derivative works**. See [LICENSE](LICENSE).
 
 ## Author
 
-Created by [Diego Cantero](https://www.linkedin.com/in/diegocantero/) — [GitHub](https://github.com/diegocantero).
+Created by [Diego Cantero](https://www.linkedin.com/in/diego-cantero) — [GitHub](https://github.com/diegocantero).

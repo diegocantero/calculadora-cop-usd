@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Calculadora de salario equivalente COP ↔ USD para independientes en Colombia",
   "author": "Diego Cantero",
-  "license": "MIT",
+  "license": "CC-BY-NC-ND-4.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
