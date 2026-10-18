@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { textos } from '../content/textos';
 import { mesesFacturables } from '../lib/calc';
+import { track } from '../lib/analytics';
 import { formatCOP, formatUSD, formatNumber } from '../hooks/useCalculator';
 import { CheckIcon, CopyIcon, XIcon, ArrowRightIcon, SparkIcon } from './Icons';
 import Switch from './Switch';
@@ -36,6 +37,7 @@ export default function Calculator({
   };
 
   const handleCopyResult = async () => {
+    track('copy_result', { direction });
     try {
       const summary =
         direction === 'copToUsd'
@@ -100,6 +102,7 @@ export default function Calculator({
             aria-pressed={direction === 'copToUsd'}
             onClick={() => {
               if (direction !== 'copToUsd') {
+                track('direction_change', { direction: 'copToUsd' });
                 setDirection('copToUsd');
                 if (!amount || amount < 100000) setAmount(3000000);
               }
@@ -119,6 +122,7 @@ export default function Calculator({
             aria-pressed={direction === 'usdToCop'}
             onClick={() => {
               if (direction !== 'usdToCop') {
+                track('direction_change', { direction: 'usdToCop' });
                 setDirection('usdToCop');
                 if (!amount || amount > 50000) setAmount(1000);
               }
@@ -178,7 +182,10 @@ export default function Calculator({
               <button
                 key={value}
                 type="button"
-                onClick={() => setAmount(value)}
+                onClick={() => {
+                  track('amount_preset', { direction });
+                  setAmount(value);
+                }}
                 className={chipClass}
               >
                 {label}
@@ -189,7 +196,14 @@ export default function Calculator({
 
         <div className="mt-3 rounded-xl border border-line bg-sunken/60 px-3 py-1.5">
           <div className="flex flex-wrap items-center justify-between gap-x-3">
-            <Switch id="vacation-switch" checked={paidVacation} onChange={setPaidVacation}>
+            <Switch
+              id="vacation-switch"
+              checked={paidVacation}
+              onChange={(paid) => {
+                track('vacation_toggle', { paid });
+                setPaidVacation(paid);
+              }}
+            >
               {textos.hero.vacacionesSwitch}
             </Switch>
 

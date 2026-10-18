@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { textos } from '../content/textos';
 import { CheckIcon, LinkIcon } from './Icons';
+import { track } from '../lib/analytics';
 
 export default function Footer() {
   const [shared, setShared] = useState(false);
   const { legal, autor, linkedIn, repo, licencia, compartir, compartido } = textos.footer;
 
   const handleShare = async () => {
+    track('share_click');
     const shareData = {
       title: 'Calculadora COP ↔ USD para Independientes',
       text: 'Calcula tu salario equivalente entre pesos colombianos y dólares para contratos remotos.',

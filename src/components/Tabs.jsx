@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { track } from '../lib/analytics';
 
 /**
  * Accessible tabs (WAI-ARIA tabs pattern, automatic activation).
@@ -46,7 +47,10 @@ export default function Tabs({ tabs, active, onChange, ariaLabel, panels }) {
               aria-selected={selected}
               aria-controls={tab.id}
               tabIndex={selected ? 0 : -1}
-              onClick={() => onChange(tab.id)}
+              onClick={() => {
+                track('tab_change', { tab: tab.id });
+                onChange(tab.id);
+              }}
               onKeyDown={(e) => onKeyDown(e, index)}
               className={`inline-flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-xl px-3.5 text-sm font-semibold transition-colors ${
                 selected

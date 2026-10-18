@@ -3,6 +3,7 @@ import { formatCOP, formatUSD } from '../hooks/useCalculator';
 import { AlertIcon, BriefcaseIcon, GlobeIcon } from './Icons';
 import Switch from './Switch';
 import TaxAlert from './TaxAlert';
+import { track } from '../lib/analytics';
 import { mesesFacturables } from '../lib/calc';
 import { AUXILIO_TRANSPORTE_2026, INTERESES_CESANTIAS, SMMLV_2026 } from '../config';
 
@@ -125,7 +126,10 @@ export default function ComparisonCards({
         <Switch
           id="withholding-switch"
           checked={compareAfterWithholding}
-          onChange={setCompareAfterWithholding}
+          onChange={(on) => {
+            track('withholding_toggle', { on });
+            setCompareAfterWithholding(on);
+          }}
         >
           {textos.retencion.switch}
         </Switch>
