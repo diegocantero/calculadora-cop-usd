@@ -1,15 +1,11 @@
 import TopBar from './components/TopBar';
 import Calculator from './components/Calculator';
 import AdvancedSettings from './components/AdvancedSettings';
-import ComparisonCards from './components/ComparisonCards';
-import WithholdingSection from './components/WithholdingSection';
-import TaxAlert from './components/TaxAlert';
-import HowItWorks from './components/HowItWorks';
-import TaxRelief from './components/TaxRelief';
-import FAQ from './components/FAQ';
-import Sources from './components/Sources';
+import DetailTabs from './components/DetailTabs';
+import MoreInfo from './components/MoreInfo';
 import Footer from './components/Footer';
 import { useCalculator } from './hooks/useCalculator';
+import { textos } from './content/textos';
 
 export default function App() {
   const {
@@ -25,6 +21,7 @@ export default function App() {
     setIsIntegral,
     trm,
     setTrm,
+    trmInfo,
     exchangeCostPct,
     setExchangeCostPct,
     uvt,
@@ -37,70 +34,65 @@ export default function App() {
   } = useCalculator();
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
-      {/* 1. Sticky Navigation TopBar */}
+    <div className="flex min-h-screen flex-col bg-canvas text-body">
       <TopBar />
 
-      <main className="flex-1">
-        {/* 2. Hero & Main Interactive Calculator */}
-        <Calculator
-          direction={direction}
-          setDirection={setDirection}
-          amount={amount}
-          setAmount={setAmount}
-          paidVacation={paidVacation}
-          setPaidVacation={setPaidVacation}
-          vacationDays={vacationDays}
-          setVacationDays={setVacationDays}
-          result={result}
-          trm={trm}
-        />
+      <main className="hero-mesh flex-1">
+        <div className="mx-auto max-w-6xl space-y-4 px-4 pb-5 pt-4 sm:px-6 sm:pt-5">
+          {/* Compact hero */}
+          <div>
+            <h1 className="text-balance text-xl font-extrabold leading-tight tracking-tight text-ink sm:text-3xl">
+              {textos.hero.title}
+            </h1>
+            <p className="mt-1 max-w-3xl text-pretty text-sm leading-snug text-muted sm:text-base">
+              {textos.hero.subtitle}
+            </p>
+          </div>
 
-        {/* Advanced Settings (collapsible, placed below the calculator) */}
-        <AdvancedSettings
-          trm={trm}
-          setTrm={setTrm}
-          exchangeCostPct={exchangeCostPct}
-          setExchangeCostPct={setExchangeCostPct}
-          uvt={uvt}
-          setUvt={setUvt}
-          isIntegral={isIntegral}
-          setIsIntegral={setIsIntegral}
-          resetDefaults={resetDefaults}
-          defaults={defaults}
-        />
+          {/* Dashboard: inputs (left) + sticky result (right) */}
+          <Calculator
+            direction={direction}
+            setDirection={setDirection}
+            amount={amount}
+            setAmount={setAmount}
+            paidVacation={paidVacation}
+            setPaidVacation={setPaidVacation}
+            vacationDays={vacationDays}
+            setVacationDays={setVacationDays}
+            result={result}
+            trm={trm}
+          >
+            <AdvancedSettings
+              trm={trm}
+              setTrm={setTrm}
+              exchangeCostPct={exchangeCostPct}
+              setExchangeCostPct={setExchangeCostPct}
+              uvt={uvt}
+              setUvt={setUvt}
+              isIntegral={isIntegral}
+              setIsIntegral={setIsIntegral}
+              resetDefaults={resetDefaults}
+              defaults={defaults}
+            />
+          </Calculator>
 
-        {/* 3. Comparison Cards (Empleado vs Independiente) */}
-        <ComparisonCards
-          result={result}
-          isIntegral={isIntegral}
-          trm={trm}
-        />
+          {/* Tabbed detail: comparison / withholding & taxes / tax relief */}
+          <DetailTabs
+            result={result}
+            isIntegral={isIntegral}
+            trm={trm}
+            paidVacation={paidVacation}
+            vacationDays={vacationDays}
+            uvt={uvt}
+            compareAfterWithholding={compareAfterWithholding}
+            setCompareAfterWithholding={setCompareAfterWithholding}
+          />
 
-        {/* 4. Withholding & Tax Provisioning Section */}
-        <WithholdingSection
-          result={result}
-          compareAfterWithholding={compareAfterWithholding}
-          setCompareAfterWithholding={setCompareAfterWithholding}
-        />
-
-        {/* 5. Conditional DIAN Tax Alert Banner (>= 1,400 UVT) */}
-        <TaxAlert result={result} uvt={uvt} />
-
-        {/* 6. How It Works (3 Steps) */}
-        <HowItWorks />
-
-        {/* 7. Tax Relief Accordion & Statutory Limits */}
-        <TaxRelief />
-
-        {/* 8. Frequently Asked Questions (FAQ) */}
-        <FAQ />
-
-        {/* 9. Official Data Sources & Parameter Validity */}
-        <Sources trm={trm} />
+          {/* Tabbed extra info: how it works / FAQ / sources */}
+          <MoreInfo trm={trm} trmInfo={trmInfo} />
+        </div>
       </main>
 
-      {/* 10. Comprehensive Footer */}
       <Footer />
     </div>
   );

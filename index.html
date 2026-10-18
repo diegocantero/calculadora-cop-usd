@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="es" class="h-full">
   <head>
+    <script>
+      // Apply the saved theme before first paint to avoid a light/dark flash.
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculadora COP ↔ USD | Salario Equivalente Colombia</title>
@@ -9,7 +16,8 @@
       content="Calculadora de equivalencia salarial COP ↔ USD para profesionales e independientes en Colombia. Compara prestaciones sociales, seguridad social, costos de cambio y retención en la fuente."
     />
     <meta name="author" content="Diego Cantero" />
-    <meta name="theme-color" content="#059669" />
+    <meta name="theme-color" content="#f6f8fb" />
+    <meta name="color-scheme" content="light" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -38,7 +46,7 @@
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
-  <body class="min-h-full bg-slate-50 text-slate-900 antialiased selection:bg-emerald-500 selection:text-white dark:bg-slate-950 dark:text-slate-100">
+  <body class="min-h-full bg-canvas text-body antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

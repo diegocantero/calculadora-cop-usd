@@ -1,33 +1,242 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --color-emerald-500: #10b981;
-  --color-emerald-600: #059669;
-}
-
+/* ------------------------------------------------------------------ */
+/* Design tokens                                                       */
+/* Light is the default theme. Dark applies only when the user picks   */
+/* it with the toggle (html[data-theme='dark']). Tailwind utilities    */
+/* (bg-surface, text-ink, border-line, ...) read these variables via   */
+/* `@theme inline`, so components never need dark: color variants.     */
+/* ------------------------------------------------------------------ */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
+
+  /* Neutral surface scale (cool slate-blue) */
+  --c-canvas: #f6f8fb;
+  --c-surface: #ffffff;
+  --c-sunken: #eef2f7;
+  --c-line: #e0e6ee;
+  --c-line-strong: #c4cdda;
+
+  /* Text scale (all AA on canvas/surface/sunken) */
+  --c-ink: #0f1b2d;
+  --c-body: #34425a;
+  --c-muted: #55637a; /* 6.0:1 on surface, 5.3:1 on sunken */
+
+  /* Brand: cobalt blue */
+  --c-brand: #1d4ed8;
+  --c-on-brand: #ffffff;
+  --c-brand-text: #1e40af;
+  --c-brand-soft: #e8efff;
+  --c-brand-line: #bcd0ff;
+
+  /* Semantic: success (green), warning (amber) */
+  --c-ok: #15803d;
+  --c-ok-text: #166534;
+  --c-ok-soft: #e6f6ec;
+  --c-ok-line: #a3dbb7;
+
+  --c-warn: #d97706;
+  --c-warn-text: #8a3b07;
+  --c-warn-soft: #fef5df;
+  --c-warn-line: #f6cf7f;
+
+  /* Hero result card gradient (same in both themes, always white text) */
+  --c-hero-from: #0a2463;
+  --c-hero-via: #1d4ed8;
+  --c-hero-to: #0e7490;
+
+  --mesh-a: rgba(29, 78, 216, 0.16);
+  --mesh-b: rgba(8, 145, 178, 0.13);
+  --mesh-c: rgba(250, 204, 21, 0.1);
+
+  --s-card: 0 1px 2px rgba(15, 27, 45, 0.04), 0 4px 12px rgba(15, 27, 45, 0.04),
+    0 16px 40px -12px rgba(15, 27, 45, 0.1);
+  --s-lift: 0 2px 4px rgba(15, 27, 45, 0.05), 0 12px 24px rgba(15, 27, 45, 0.08),
+    0 32px 64px -16px rgba(15, 27, 45, 0.16);
+  --s-hero: 0 2px 4px rgba(10, 36, 99, 0.2), 0 16px 32px -8px rgba(29, 78, 216, 0.36),
+    0 40px 80px -24px rgba(10, 36, 99, 0.4);
 }
 
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --c-canvas: #070d1a;
+  --c-surface: #0f1729;
+  --c-sunken: #172138;
+  --c-line: #223052;
+  --c-line-strong: #34456b;
+
+  --c-ink: #eef3fc;
+  --c-body: #c2ccdf;
+  --c-muted: #9aa8c4; /* 7.2:1 on surface */
+
+  --c-brand: #6ea0ff;
+  --c-on-brand: #06112a;
+  --c-brand-text: #9bbcff;
+  --c-brand-soft: rgba(110, 160, 255, 0.14);
+  --c-brand-line: rgba(110, 160, 255, 0.32);
+
+  --c-ok: #34d399;
+  --c-ok-text: #6ee7b7;
+  --c-ok-soft: rgba(52, 211, 153, 0.12);
+  --c-ok-line: rgba(52, 211, 153, 0.3);
+
+  --c-warn: #f59e0b;
+  --c-warn-text: #fcd34d;
+  --c-warn-soft: rgba(245, 158, 11, 0.12);
+  --c-warn-line: rgba(245, 158, 11, 0.35);
+
+  --c-hero-from: #0a1f55;
+  --c-hero-via: #1e40af;
+  --c-hero-to: #0e6b82;
+
+  --mesh-a: rgba(59, 110, 246, 0.2);
+  --mesh-b: rgba(8, 145, 178, 0.12);
+  --mesh-c: rgba(250, 204, 21, 0.06);
+
+  --s-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+  --s-lift: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 16px 40px -12px rgba(0, 0, 0, 0.6);
+  --s-hero: 0 20px 60px -16px rgba(29, 78, 216, 0.55);
+}
+
+@theme inline {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --color-canvas: var(--c-canvas);
+  --color-surface: var(--c-surface);
+  --color-sunken: var(--c-sunken);
+  --color-line: var(--c-line);
+  --color-line-strong: var(--c-line-strong);
+  --color-ink: var(--c-ink);
+  --color-body: var(--c-body);
+  --color-muted: var(--c-muted);
+  --color-brand: var(--c-brand);
+  --color-on-brand: var(--c-on-brand);
+  --color-brand-text: var(--c-brand-text);
+  --color-brand-soft: var(--c-brand-soft);
+  --color-brand-line: var(--c-brand-line);
+  --color-ok: var(--c-ok);
+  --color-ok-text: var(--c-ok-text);
+  --color-ok-soft: var(--c-ok-soft);
+  --color-ok-line: var(--c-ok-line);
+  --color-warn: var(--c-warn);
+  --color-warn-text: var(--c-warn-text);
+  --color-warn-soft: var(--c-warn-soft);
+  --color-warn-line: var(--c-warn-line);
+
+  --shadow-card: var(--s-card);
+  --shadow-lift: var(--s-lift);
+  --shadow-hero: var(--s-hero);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
 html {
-  font-family: var(--font-sans, system-ui, sans-serif);
+  font-family: var(--font-sans);
   scroll-behavior: smooth;
+  scroll-padding-top: 4rem;
+  -webkit-text-size-adjust: 100%;
 }
 
-/* Ensure smooth focus rings and accessible outlines */
+body {
+  background-color: var(--c-canvas);
+  color: var(--c-body);
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+::selection {
+  background: var(--c-brand);
+  color: var(--c-on-brand);
+}
+
 :focus-visible {
-  outline: 2px solid #10b981;
-  outline-offset: 2px;
+  outline: 2px solid var(--c-brand);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
 }
 
-/* Number input styling without awkward default browser arrows */
+/* Number input without browser spinners */
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 input[type='number'] {
   -moz-appearance: textfield;
+}
+
+/* ------------------------------------------------------------------ */
+/* Reusable pieces                                                     */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .card {
+    @apply rounded-3xl border border-line bg-surface shadow-card;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-brand-text;
+  }
+
+  .field {
+    @apply min-h-11 w-full rounded-xl border border-line-strong bg-surface px-3.5 py-2 text-sm font-semibold text-ink tabular-nums outline-none transition;
+    @apply focus:border-brand focus:ring-4 focus:ring-brand/20;
+  }
+
+  .btn-ghost {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line-strong bg-surface px-4 py-2 text-sm font-semibold text-ink transition;
+    @apply hover:border-brand hover:text-brand-text active:scale-[0.98];
+  }
+
+  .icon-tile {
+    @apply flex shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand-text;
+  }
+
+  .hero-mesh {
+    background-image:
+      radial-gradient(60rem 30rem at 15% -10%, var(--mesh-a), transparent 60%),
+      radial-gradient(45rem 28rem at 95% 0%, var(--mesh-b), transparent 60%),
+      radial-gradient(40rem 24rem at 60% 30%, var(--mesh-c), transparent 65%);
+  }
+
+  .result-card {
+    background-image:
+      radial-gradient(28rem 14rem at 100% 0%, rgba(34, 211, 238, 0.28), transparent 65%),
+      linear-gradient(135deg, var(--c-hero-from), var(--c-hero-via) 55%, var(--c-hero-to));
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .anim-in {
+    animation: fade-up 0.28s ease-out both;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

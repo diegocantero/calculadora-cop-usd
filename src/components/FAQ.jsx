@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { textos } from '../content/textos';
+import { ChevronDownIcon } from './Icons';
 
 export default function FAQ() {
-  const { title, subtitle, items } = textos.faq;
+  const { items } = textos.faq;
   const [openIndices, setOpenIndices] = useState([0]); // First item open by default
 
   const toggleIndex = (index) => {
@@ -12,56 +13,44 @@ export default function FAQ() {
   };
 
   return (
-    <section className="py-8 sm:py-12 border-t border-slate-200/60 dark:border-slate-800/60" id="faq">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6">
-        <div className="text-center">
-          <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-            Dudas comunes
-          </span>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white">
-            {title}
-          </h2>
-          <p className="mx-auto mt-2 max-w-2xl text-sm text-slate-600 sm:text-base dark:text-slate-400">
-            {subtitle}
-          </p>
-        </div>
-
-        <div className="mt-8 space-y-3">
-          {items.map((item, index) => {
-            const isOpen = openIndices.includes(index);
-            return (
-              <div
-                key={index}
-                className="overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
+    <div className="space-y-1.5">
+      {items.map((item, index) => {
+        const isOpen = openIndices.includes(index);
+        return (
+          <div
+            key={index}
+            className={`overflow-hidden rounded-xl border bg-surface transition-colors ${
+              isOpen ? 'border-brand-line' : 'border-line hover:border-line-strong'
+            }`}
+          >
+            <h3>
+              <button
+                type="button"
+                onClick={() => toggleIndex(index)}
+                aria-expanded={isOpen}
+                aria-controls={`faq-panel-${index}`}
+                className="flex min-h-11 w-full items-center justify-between gap-3 px-3.5 py-2 text-left"
               >
-                <button
-                  type="button"
-                  onClick={() => toggleIndex(index)}
-                  aria-expanded={isOpen}
-                  className="flex w-full min-h-[56px] items-center justify-between p-4.5 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/50 sm:p-5"
-                >
-                  <span className="text-sm font-bold text-slate-900 sm:text-base dark:text-white">
-                    {item.q}
-                  </span>
-                  <span
-                    className={`ml-4 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600 transition-transform duration-200 dark:bg-slate-800 dark:text-slate-300 ${
-                      isOpen ? 'rotate-180 bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' : ''
-                    }`}
-                  >
-                    ▼
-                  </span>
-                </button>
+                <span className="text-sm font-semibold text-ink">{item.q}</span>
+                <ChevronDownIcon
+                  className={`h-4 w-4 shrink-0 text-muted transition-transform duration-200 ${
+                    isOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+            </h3>
 
-                {isOpen && (
-                  <div className="border-t border-slate-100 px-5 pt-3 pb-5 text-xs text-slate-600 leading-relaxed sm:text-sm dark:border-slate-800/80 dark:text-slate-400">
-                    <p>{item.a}</p>
-                  </div>
-                )}
+            {isOpen && (
+              <div
+                id={`faq-panel-${index}`}
+                className="anim-in px-3.5 pb-3 text-[13px] leading-relaxed text-body"
+              >
+                <p>{item.a}</p>
               </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
