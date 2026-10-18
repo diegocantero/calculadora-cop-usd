@@ -103,7 +103,10 @@ export default function ComparisonCards({
   const independienteCobroUSD = independiente.cobroMensualUSD || 0;
   const independienteSeguridadSocial = independiente.seguridadSocialMensual || 0;
   const independienteCostoCambio = independiente.costosCambioMensual || 0;
-  const independienteDeduccionesTotal = independienteSeguridadSocial + independienteCostoCambio;
+  // Savings the contractor must set aside each month to cover prima, cesantías and intereses.
+  const ahorroPrestacionesMensual = Math.round(prestacionesAnuales / 12);
+  const independienteDeduccionesTotal =
+    independienteSeguridadSocial + independienteCostoCambio + ahorroPrestacionesMensual;
   const independienteNetoMensual = Math.max(
     0,
     independienteCobroCOP - independienteDeduccionesTotal - (withTax ? provisionIndependiente : 0)
@@ -261,12 +264,6 @@ export default function ComparisonCards({
             tone="ok"
           />
           <Row
-            label={textos.comparison.prestacionesIndependiente}
-            hint={textos.comparison.prestacionesIndependienteHint(formatCOP(prestacionesAnuales))}
-            value={textos.comparison.prestacionesIndependienteValor}
-            tone="muted"
-          />
-          <Row
             label={textos.comparison.vacacionesIndependiente}
             hint={
               paidVacation
@@ -297,6 +294,19 @@ export default function ComparisonCards({
             label={textos.comparison.costoCambio}
             hint="Spread bancario / plataformas"
             value={`- ${formatCOP(independienteCostoCambio)}`}
+          />
+          <Row
+            label={textos.comparison.ahorroPrestaciones}
+            hint={
+              isIntegral
+                ? textos.comparison.ahorroIntegral
+                : textos.comparison.ahorroHint(
+                    formatCOP(empleadoSalario),
+                    formatCOP(empleadoSalario),
+                    formatCOP(empleadoSalario * INTERESES_CESANTIAS.value)
+                  )
+            }
+            value={`- ≈ ${formatCOP(ahorroPrestacionesMensual)}/mes`}
           />
           <Row
             label={<span className="font-semibold text-ink">Total deducciones mensuales</span>}

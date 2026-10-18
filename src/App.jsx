@@ -45,6 +45,7 @@ export default function App() {
               {textos.hero.title}
             </h1>
             <p className="mt-1 max-w-3xl text-pretty text-sm leading-snug text-muted sm:text-base">
+              <span className="font-semibold text-ink">{textos.hero.question}</span>{' '}
               {textos.hero.subtitle}
             </p>
           </div>

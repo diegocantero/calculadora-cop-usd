@@ -13,7 +13,8 @@ export const textos = {
     temaOscuro: 'Cambiar a tema oscuro',
   },
   hero: {
-    title: '¿Cuánto cobrar en USD para ganar lo mismo que en pesos?',
+    title: 'Calculadora de salario en pesos vs. dólares para freelancers en Colombia',
+    question: '¿Cuánto cobrar en USD para ganar lo mismo que en pesos?',
     subtitle: 'Salario de empleado vs. tarifa de independiente, con prestaciones, seguridad social, cambio y retención.',
     quickLabel: 'Rápido:',
     resultLabelCOP: 'Tarifa mensual recomendada en el exterior',
@@ -90,14 +91,14 @@ export const textos = {
     integralIncluido: 'Incluido',
     integralPrestacional: 'Factor prestacional (30%)',
     integralPrestacionalHint: 'El salario integral ya compensa prima, cesantías e intereses',
-    prestacionesIndependiente: 'Prima, cesantías e intereses',
-    prestacionesIndependienteValor: 'Cubiertos por tu tarifa',
-    prestacionesIndependienteHint: (anual) =>
-      `El empleado recibe ≈ ${anual}/año en estos conceptos; tú debes cubrirlos`,
+    ahorroPrestaciones: 'Ahorro para prestaciones',
+    ahorroHint: (prima, cesantias, intereses) =>
+      `Prima ${prima} + cesantías ${cesantias} + intereses ${intereses} al año`,
+    ahorroIntegral: 'Salario integral: ya incluye las prestaciones',
     incluyeEmpleado:
       'La equivalencia suma salario, prima, cesantías, intereses y vacaciones del empleado.',
     incluyeIndependiente:
-      'Tu tarifa debe cubrir esas prestaciones, tu seguridad social y los costos de cambio.',
+      'Tu tarifa debe cubrir tu ahorro de prestaciones, tu seguridad social y los costos de cambio.',
     vacacionesIndependiente: 'Vacaciones',
     vacacionesIncluidasValor: 'Pagas por tu cliente',
     vacacionesIncluidasHint: 'Facturas los 12 meses del año',
